@@ -10,26 +10,33 @@ export class EmployeesComponent implements OnInit {
 
   employees: any[];
   employee: any;
+  employeeFound: boolean = false;
 
   constructor(public _employeeService: EmployeeService) {
-    this.getEmployees();
-    this.getEmployeeById('2');
    }
 
   ngOnInit() {
+    this.getEmployees();  
   }
 
   getEmployees() {
     this._employeeService.getEmployees().subscribe((resp: any) => {
       this.employees = resp;
-      console.log(this.employees);
     });
   }
 
-  getEmployeeById(id) {
-    this._employeeService.getEmployeeById(id).subscribe((resp: any) => {
-      this.employee = resp;
-      console.log(this.employee);
+  getEmployeeById(user) {
+    this._employeeService.getEmployeeById(user.userId).subscribe((resp: any) => {
+      if(resp.id !== undefined)
+      {
+        this.employee = resp;  
+        this.employees = [];
+        this.employeeFound = true;
+      } else {        
+        this.getEmployees();  
+        this.employeeFound = false;
+      }
+        console.log(this.employeeFound);
     });
   }
 
